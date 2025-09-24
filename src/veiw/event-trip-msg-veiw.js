@@ -1,13 +1,12 @@
 import { createElement } from '../render';
 
-function createEventListTemplate() {
-  return `
-  <ul class="trip-events__list"></ul>`;
+function createEventMessageTemplate() {
+  return `<p class="trip-events__msg">Loading...</p>`;
 }
 
-export default class PointListVeiw {
+export default class MessageVeiw {
   getTemplate() {
-    return createEventListTemplate();
+    return createEventMessageTemplate();
   }
 
   getElement() {

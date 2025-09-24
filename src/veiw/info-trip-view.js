@@ -14,7 +14,7 @@ function createInfoBlock() {
           </section>`;
 }
 
-export default class TripInfo {
+export default class InfoVeiw {
   getBlock() {
     return createInfoBlock();
   }

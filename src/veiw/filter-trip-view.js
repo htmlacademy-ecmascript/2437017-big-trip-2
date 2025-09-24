@@ -26,7 +26,7 @@ function createTripFilterTemplate() {
               </form>`;
 }
 
-export default class TripFilter {
+export default class FilterVeiw {
   getTemplate() {
     return createTripFilterTemplate();
   }
