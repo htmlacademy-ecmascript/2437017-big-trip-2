@@ -1,7 +1,8 @@
 import { createElement } from '../render';
 
 function createEventMessageTemplate() {
-  return `<p class="trip-events__msg">Loading...</p>`;
+  return `
+  <p class="trip-events__msg">Loading...</p>`;
 }
 
 export default class MessageVeiw {
