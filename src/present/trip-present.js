@@ -5,7 +5,8 @@ import FilterVeiw from '../veiw/filter-trip-view';
 import PointListVeiw from '../veiw/event-list-view';
 import PointItemVeiw from '../veiw/event-item-view';
 import FormEditVeiw from '../veiw/event-item-form-veiw';
-import { render, RenderPosition } from '../render.js';
+import { render} from '../render.js';
+import {RenderPosition} from '../const.js';
 
 //Конструктор принимает контейнеры для разных частей интерфейса
 export default class TripPresenter {
