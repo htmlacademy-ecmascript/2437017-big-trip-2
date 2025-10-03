@@ -1,18 +1,19 @@
-import SortEventView from '../veiw/sort-event-trip-view';
-// import InfoVeiw from '../veiw/info-trip-view';
-import FilterVeiw from '../veiw/filter-trip-view';
-// import MessageVeiw from '../veiw/event-trip-msg-veiw';
-import PointListVeiw from '../veiw/event-list-view';
-import PointItemVeiw from '../veiw/event-item-view';
-import FormEditVeiw from '../veiw/event-item-form-veiw';
-import { render} from '../render.js';
-import {RenderPosition} from '../const.js';
+import SortEventView from '../view/sort-event-trip-view.js';
+// import InfoVeiw from '../view/info-trip-view';
+import FilterView from '../view/filter-trip-view.js';
+// import MessageVeiw from '../view/event-trip-msg-veiw';
+import PointListView from '../view/event-list-view.js';
+import PointItemView from '../view/event-item-view.js';
+// import FormEditView from '../view/event-item-form-view.js';
+import { render } from '../render.js';
 
-//Конструктор принимает контейнеры для разных частей интерфейса
+const tripFilterContainer = document.querySelector('.trip-controls__filters');
+
 export default class TripPresenter {
-  constructor({ tripControlsContainer, tripEventsContainer }) {
-    this._tripControlsContainer = tripControlsContainer; // контейнер для фильтров
-    this._tripEventsContainer = tripEventsContainer; //контейнер для событий и сортировки
+  constructor({ tripContainer, pointModel }) {
+    this.tripContainer = tripContainer;
+    this.pointModel = pointModel; //все данные
+    this.eventsListComponent = new PointListView();
   }
 
   //Инициализирует весь интерфейс, вызывая три метода отрисовки
@@ -22,34 +23,26 @@ export default class TripPresenter {
     this.renderEventsList();
   }
 
-  //Создает компонент фильтров и вставляет его в конец контейнера управляющих элементов
-  renderFilters() {
-    const filterComponent = new FilterVeiw();
-    render(filterComponent, this._tripControlsContainer, RenderPosition.BEFOREEND);
+  renderEventsList() {
+    const points = this.pointModel.getPoints();// Получаем массив точек
+    const destinations = this.pointModel.getDestinations();
+    const offers = this.pointModel.getOffers();
+
+    render(this.eventsListComponent, this.tripContainer);
+
+    for (let i = 0; i < 3; i++) {
+      const eventItemComponent = new PointItemView(points[i],destinations, offers);
+      render(eventItemComponent, this.eventsListComponent.getElement());
+    }
   }
 
-  //Создает компонент сортировки и вставляет его в конец контейнера событий
+  renderFilters() {
+    const filterComponent = new FilterView();
+    render(filterComponent, tripFilterContainer);
+  }
+
   renderSorting() {
     const sortingComponent = new SortEventView();
-    render(sortingComponent, this._tripEventsContainer, RenderPosition.BEFOREEND);
-  }
-
-  renderEventsList() {
-    // 1. Создаем контейнер для списка событий
-    const eventsListComponent = new PointListVeiw();
-    render(eventsListComponent, this._tripEventsContainer, RenderPosition.BEFOREEND);
-
-    // 2. Получаем DOM-элемент контейнера
-    const eventListContainer = eventsListComponent.getElement();
-
-    // 3. Добавляем форму редактирования в НАЧАЛО списка
-    const formEditPointComponent = new FormEditVeiw();
-    render(formEditPointComponent, eventListContainer, RenderPosition.AFTERBEGIN);
-
-    // 4. Добавляем 3 карточки событий в КОНЕЦ списка
-    for (let i = 0; i < 3; i++) {
-      const eventItemComponent = new PointItemVeiw();
-      render(eventItemComponent, eventListContainer, RenderPosition.BEFOREEND);
-    }
+    render(sortingComponent, this.tripContainer);
   }
 }

@@ -1,4 +1,4 @@
-export const mockDestination = [
+export const mockDestinations = [
   {
     id: '1',
     description:
