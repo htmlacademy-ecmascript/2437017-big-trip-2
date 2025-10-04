@@ -1,7 +1,8 @@
-import TripPresenter from '../src/present/trip-present';
+import TripPresenter from './present/trip-present.js';
+import PointModel from './model/point-model.js';
 
-const tripControlsContainer = document.querySelector('.trip-controls__filters');
-const tripEventsContainer = document.querySelector('.trip-events');
+const tripEventsContainer = document.querySelector('.trip-events'); // основной контейнер
 
-const tripPresenter = new TripPresenter({ tripControlsContainer, tripEventsContainer });
+const pointModel = new PointModel();
+const tripPresenter = new TripPresenter({ tripContainer: tripEventsContainer, pointModel });
 tripPresenter.init();
