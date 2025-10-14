@@ -1,6 +1,7 @@
-import { createElement } from '../render';
+// import { createElement } from '../render';
 import { humanizeDate } from '../utils.js';
 import { DATE_FORMAT } from '../const.js';
+import AbstractView from '../framework/view/abstract-view.js';
 
 function createEventFormEdit(point, destinations, offers) {
   const { type, dateFrom, dateTo, basePrice } = point;
@@ -144,27 +145,28 @@ function createEventFormEdit(point, destinations, offers) {
             </li>`;
 }
 
-export default class FormEditView {
+export default class FormEditView extends AbstractView {
 
   constructor(point, destinations, offers) {
+    super();
     this.point = point;
     this.destinations = destinations;
     this.offers = offers;
   }
 
 
-  getTemplate() {
+  get template() {
     return createEventFormEdit(this.point, this.destinations, this.offers);
   }
 
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
-    }
-    return this.element;
-  }
+  // getElement() {
+  //   if (!this.element) {
+  //     this.element = createElement(this.getTemplate());
+  //   }
+  //   return this.element;
+  // }
 
-  removeElement() {
-    this.element = null;
-  }
+  // removeElement() {
+  //   this.element = null;
+  // }
 }

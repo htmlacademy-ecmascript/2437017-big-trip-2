@@ -1,7 +1,8 @@
-import { createElement } from '../render.js';
+// import { createElement } from '../render.js';
 import { humanizeDate } from '../utils.js';
 import { DATE_FORMAT } from '../const.js';
 import dayjs from 'dayjs';
+import AbstractView from '../framework/view/abstract-view.js';
 
 function createEventItemTemplate(point, destinations, offers) {
   const { type, dateFrom, dateTo, basePrice, isFavorite } = point;
@@ -84,26 +85,27 @@ function createEventItemTemplate(point, destinations, offers) {
             </li>`;
 }
 
-export default class PointItemView {
+export default class PointItemView extends AbstractView {
 
   constructor(point, destinations, offers) {
+    super();
     this.point = point;
     this.destinations = destinations;
     this.offers = offers;
   }
 
-  getTemplate() {
+  get template() {
     return createEventItemTemplate(this.point, this.destinations, this.offers);
   }
 
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
-    }
-    return this.element;
-  }
+  // getElement() {
+  //   if (!this.element) {
+  //     this.element = createElement(this.getTemplate());
+  //   }
+  //   return this.element;
+  // }
 
-  removeElement() {
-    this.element = null;
-  }
+  // removeElement() {
+  //   this.element = null;
+  // }
 }

@@ -5,7 +5,7 @@ import FilterView from '../view/filter-trip-view.js';
 import PointListView from '../view/event-list-view.js';
 import PointItemView from '../view/event-item-point-view.js';
 import FormEditView from '../view/event-item-point-edit-view.js';
-import { render } from '../render.js';
+import { render } from '../framework/render.js';
 
 const tripFilterContainer = document.querySelector('.trip-controls__filters');
 
@@ -25,11 +25,11 @@ export default class TripPresenter {
     render(new FilterView(), tripFilterContainer);
     render(new SortEventView(), this.tripContainer);
     render(this.eventsListComponent, this.tripContainer);
-    render(new FormEditView(points[2],destinations, offers), this.eventsListComponent.getElement());
+    render(new FormEditView(points[2],destinations, offers), this.eventsListComponent.element);
 
     for (let i = 0; i < 3; i++) {
       const eventItemComponent = new PointItemView(points[i],destinations, offers);
-      render(eventItemComponent, this.eventsListComponent.getElement());
+      render(eventItemComponent, this.eventsListComponent.element);
     }
   }
 }
