@@ -145,18 +145,40 @@ function createEventFormEdit(point, destinations, offers) {
             </li>`;
 }
 
+/**
+ * Представление элемента точки маршрута
+ * @class PointItemView
+ * @extends AbstractView
+ */
 export default class FormEditView extends AbstractView {
+  /** @private */
+  #point;
+  /** @private */
+  #destinations;
+  /** @private */
+  #offers;
+
+  /**
+   * Создает экземпляр представления точки маршрута
+   * @param {object} point - данные точки маршрута
+   * @param {object[]} destinations - массив направлений
+   * @param {object[]} offers - массив типов предложений
+   */
 
   constructor(point, destinations, offers) {
     super();
-    this.point = point;
-    this.destinations = destinations;
-    this.offers = offers;
+    this.#point = point;
+    this.#destinations = destinations;
+    this.#offers = offers;
   }
 
+  /**
+   * Возвращает HTML-разметку элемента
+   * @returns {string} HTML-разметка
+  */
 
   get template() {
-    return createEventFormEdit(this.point, this.destinations, this.offers);
+    return createEventFormEdit(this.#point, this.#destinations, this.#offers);
   }
 
   // getElement() {

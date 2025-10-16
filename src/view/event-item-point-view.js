@@ -4,7 +4,9 @@ import { DATE_FORMAT } from '../const.js';
 import dayjs from 'dayjs';
 import AbstractView from '../framework/view/abstract-view.js';
 
+
 function createEventItemTemplate(point, destinations, offers) {
+
   const { type, dateFrom, dateTo, basePrice, isFavorite } = point;
 
   // Находим соотвествующий текущиму point destination по id
@@ -85,17 +87,40 @@ function createEventItemTemplate(point, destinations, offers) {
             </li>`;
 }
 
+/**
+ * Представление элемента точки маршрута
+ * @class PointItemView
+ * @extends AbstractView
+ */
 export default class PointItemView extends AbstractView {
+  /** @private */
+  #point;
+  /** @private */
+  #destinations;
+  /** @private */
+  #offers;
+
+  /**
+   * Создает экземпляр представления точки маршрута
+   * @param {object} point - данные точки маршрута
+   * @param {object[]} destinations - массив направлений
+   * @param {object[]} offers - массив типов предложений
+   */
 
   constructor(point, destinations, offers) {
     super();
-    this.point = point;
-    this.destinations = destinations;
-    this.offers = offers;
+    this.#point = point;
+    this.#destinations = destinations;
+    this.#offers = offers;
   }
 
+  /**
+   * Возвращает HTML-разметку элемента
+   * @returns {string} HTML-разметка
+  */
+
   get template() {
-    return createEventItemTemplate(this.point, this.destinations, this.offers);
+    return createEventItemTemplate(this.#point, this.#destinations, this.#offers);
   }
 
   // getElement() {
