@@ -5,7 +5,7 @@ import FilterView from '../view/filter-trip-view.js';
 import PointListView from '../view/event-list-view.js';
 import PointItemView from '../view/event-item-point-view.js';
 import FormEditView from '../view/event-item-point-edit-view.js';
-import { render } from '../framework/render.js';
+import { render, replace } from '../framework/render.js';
 
 const tripFilterContainer = document.querySelector('.trip-controls__filters');
 
@@ -21,7 +21,7 @@ export default class TripPresenter {
   #pointModel;
   /** @private */
   #eventsListComponent;
-  #eventItemComponent;
+  #pointComponent;
 
   constructor({ tripContainer, pointModel }) {
     this.#tripContainer = tripContainer;
@@ -38,17 +38,51 @@ export default class TripPresenter {
     render(new FilterView(), tripFilterContainer);
     render(new SortEventView(), this.#tripContainer);
     render(this.#eventsListComponent, this.#tripContainer);
-    render(new FormEditView(points[2],destinations, offers), this.#eventsListComponent.element);
 
-    for (let i = 0; i < 3; i++) {
-      // const eventItemComponent = new PointItemView(points[i],destinations, offers);
+    for (let i = 0; i < points.length; i++) {
       this.#renderPoint(points[i],destinations, offers);
-      // render(eventItemComponent, this.#eventsListComponent.element);
     }
   }
 
   #renderPoint (point, destinations, offers) {
-    this.#eventItemComponent = new PointItemView(point, destinations, offers);
-    render(this.#eventItemComponent, this.#eventsListComponent.element);
+
+    const escKeyDownHandler = (evt) => {
+      if(evt.key === 'Escape') {
+        evt.preventDefault();
+        //() ф-ции замена формы на картачку
+        replaceFormToCard();
+        document.removeEventListener('keydown', escKeyDownHandler);
+      }
+    };
+
+    // Внешние обработчики, передаваемые в конструкторы компонентов
+    const handleOpenEdit = () => {
+      replaceCardToForm();
+      document.addEventListener('keydown', escKeyDownHandler);
+    };
+
+    const handleFormSubmit = () => {
+      // Здесь будет логика сохранения формы
+      replaceFormToCard();
+      document.removeEventListener('keydown', escKeyDownHandler);
+    };
+
+    const handleFormClose = () => {
+      replaceFormToCard();
+      document.removeEventListener('keydown', escKeyDownHandler);
+    };
+
+    const pointComponent = new PointItemView(point, destinations, offers, handleOpenEdit);
+    const pointEditComponent = new FormEditView(point, destinations, offers, handleFormClose, handleFormSubmit);
+
+    function replaceCardToForm() {
+      replace(pointEditComponent, pointComponent);
+    }
+
+    function replaceFormToCard() {
+      replace(pointComponent, pointEditComponent);
+    }
+
+    render(pointComponent, this.#eventsListComponent.element);
   }
 }

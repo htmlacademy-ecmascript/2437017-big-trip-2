@@ -99,6 +99,7 @@ export default class PointItemView extends AbstractView {
   #destinations;
   /** @private */
   #offers;
+  #handleClick;
 
   /**
    * Создает экземпляр представления точки маршрута
@@ -107,11 +108,20 @@ export default class PointItemView extends AbstractView {
    * @param {object[]} offers - массив типов предложений
    */
 
-  constructor(point, destinations, offers) {
+  constructor(point, destinations, offers, onClick) {
     super();
     this.#point = point;
     this.#destinations = destinations;
     this.#offers = offers;
+    this.#handleClick = onClick;
+    this.rollupButton.addEventListener('click', this.#editClickHandle);
+  }
+
+  /**
+   * Геттер для кнопки раскрытия (стрелка вниз)
+   */
+  get rollupButton() {
+    return this.element.querySelector('.event__rollup-btn');
   }
 
   /**
@@ -123,14 +133,8 @@ export default class PointItemView extends AbstractView {
     return createEventItemTemplate(this.#point, this.#destinations, this.#offers);
   }
 
-  // getElement() {
-  //   if (!this.element) {
-  //     this.element = createElement(this.getTemplate());
-  //   }
-  //   return this.element;
-  // }
-
-  // removeElement() {
-  //   this.element = null;
-  // }
+  #editClickHandle = (evt) => {
+    evt.preventDefault();
+    this.#handleClick();
+  };
 }

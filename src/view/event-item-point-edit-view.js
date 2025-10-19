@@ -107,6 +107,9 @@ function createEventFormEdit(point, destinations, offers) {
 
                   <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
                   <button class="event__reset-btn" type="reset">Cancel</button>
+                  <button class="event__rollup-btn" type="button">
+                    <span class="visually-hidden">Open event</span>
+                  </button>
                 </header>
                 <section class="event__details">
                   <section class="event__section  event__section--offers">
@@ -157,6 +160,8 @@ export default class FormEditView extends AbstractView {
   #destinations;
   /** @private */
   #offers;
+  #handleClick;
+  #handleSubmit;
 
   /**
    * Создает экземпляр представления точки маршрута
@@ -165,12 +170,40 @@ export default class FormEditView extends AbstractView {
    * @param {object[]} offers - массив типов предложений
    */
 
-  constructor(point, destinations, offers) {
+  constructor(point, destinations, offers, onClick, onSubmit) {
     super();
     this.#point = point;
     this.#destinations = destinations;
     this.#offers = offers;
+    this.#handleClick = onClick;
+    this.#handleSubmit = onSubmit;
+    this.form.addEventListener('submit', this.#submitHandler);
+    this.rollupButton.addEventListener('click', this.#editClickHandle);
   }
+
+  /**
+   * Геттер для формы редактирования
+   */
+  get form() {
+    return this.element.querySelector('.event--edit');
+  }
+
+  /**
+   * Геттер для кнопки "Стрелка вверх"
+   */
+  get rollupButton() {
+    return this.element.querySelector('.event__rollup-btn');
+  }
+
+  #submitHandler = (evt) => {
+    evt.preventDefault();
+    this.#handleSubmit();
+  };
+
+  #editClickHandle = (evt) => {
+    evt.preventDefault();
+    this.#handleClick();
+  };
 
   /**
    * Возвращает HTML-разметку элемента
@@ -180,15 +213,4 @@ export default class FormEditView extends AbstractView {
   get template() {
     return createEventFormEdit(this.#point, this.#destinations, this.#offers);
   }
-
-  // getElement() {
-  //   if (!this.element) {
-  //     this.element = createElement(this.getTemplate());
-  //   }
-  //   return this.element;
-  // }
-
-  // removeElement() {
-  //   this.element = null;
-  // }
 }
