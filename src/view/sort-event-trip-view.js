@@ -34,15 +34,4 @@ export default class SortEventView extends AbstractView {
   get template(){
     return createSortEventTemplate();
   }
-
-  // getElement(){
-  //   if(!this.element){
-  //     this.element = createElement(this.getTemplate());
-  //   }
-  //   return this.element;
-  // }
-
-  // removeElement() {
-  //   this.element = null;
-  // }
 }

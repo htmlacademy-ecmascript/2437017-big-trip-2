@@ -10,15 +10,4 @@ export default class PointListVeiw extends AbstractView {
   get template() {
     return createEventListTemplate();
   }
-
-  // getElement() {
-  //   if (!this.element) {
-  //     this.element = createElement(this.getTemplate());
-  //   }
-  //   return this.element;
-  // }
-
-  // removeElement() {
-  //   this.element = null;
-  // }
 }

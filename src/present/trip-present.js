@@ -1,7 +1,7 @@
 import SortEventView from '../view/sort-event-trip-view.js';
 // import InfoVeiw from '../view/info-trip-view';
 import FilterView from '../view/filter-trip-view.js';
-// import MessageVeiw from '../view/event-trip-msg-veiw';
+import NoPointMessage from '../view//no-point-view.js';
 import PointListView from '../view/event-list-view.js';
 import PointItemView from '../view/event-item-point-view.js';
 import FormEditView from '../view/event-item-point-edit-view.js';
@@ -36,6 +36,10 @@ export default class TripPresenter {
     const offers = this.#pointModel.offers;
 
     render(new FilterView(), tripFilterContainer);
+    if (points.length === 0) {
+      render(new NoPointMessage(), this.#tripContainer);
+      return;
+    }
     render(new SortEventView(), this.#tripContainer);
     render(this.#eventsListComponent, this.#tripContainer);
 
