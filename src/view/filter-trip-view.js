@@ -31,4 +31,15 @@ export default class FilterVeiw extends AbstractView {
   get template() {
     return createTripFilterTemplate();
   }
+
+  // getElement() {
+  //   if(!this.element) {
+  //     this.element = createElement(this.getTemplate());
+  //   }
+  //   return this.element;
+  // }
+
+  // removeElement() {
+  //   this.element = null;
+  // }
 }

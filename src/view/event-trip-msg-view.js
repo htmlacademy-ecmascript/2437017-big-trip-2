@@ -1,4 +1,3 @@
-// import { createElement } from '../render';
 import AbstractView from '../framework/view/abstract-view.js';
 
 function createEventMessageTemplate() {
@@ -6,8 +5,9 @@ function createEventMessageTemplate() {
   <p class="trip-events__msg">Loading...</p>`;
 }
 
-export default class MessageVeiw extends AbstractView {
+export default class MessageView extends AbstractView {
   get template() {
     return createEventMessageTemplate();
   }
+
 }

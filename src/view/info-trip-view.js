@@ -19,4 +19,17 @@ export default class InfoVeiw extends AbstractView {
   get template() {
     return createInfoBlock();
   }
+
+
+  // getElement() {
+  //   if(!this.element) {
+  //     this.element = createElement(this.getBlock());
+  //   }
+
+  //   return this.element;
+  // }
+
+  // removeElement() {
+  //   this.element = null;
+  // }
 }

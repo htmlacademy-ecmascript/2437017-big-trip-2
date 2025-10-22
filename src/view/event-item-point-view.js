@@ -1,4 +1,3 @@
-// import { createElement } from '../render.js';
 import { humanizeDate } from '../utils.js';
 import { DATE_FORMAT } from '../const.js';
 import dayjs from 'dayjs';
@@ -93,20 +92,11 @@ function createEventItemTemplate(point, destinations, offers) {
  * @extends AbstractView
  */
 export default class PointItemView extends AbstractView {
-  /** @private */
+
   #point;
-  /** @private */
   #destinations;
-  /** @private */
   #offers;
   #handleClick;
-
-  /**
-   * Создает экземпляр представления точки маршрута
-   * @param {object} point - данные точки маршрута
-   * @param {object[]} destinations - массив направлений
-   * @param {object[]} offers - массив типов предложений
-   */
 
   constructor(point, destinations, offers, onClick) {
     super();
@@ -117,17 +107,9 @@ export default class PointItemView extends AbstractView {
     this.rollupButton.addEventListener('click', this.#editClickHandle);
   }
 
-  /**
-   * Геттер для кнопки раскрытия (стрелка вниз)
-   */
   get rollupButton() {
     return this.element.querySelector('.event__rollup-btn');
   }
-
-  /**
-   * Возвращает HTML-разметку элемента
-   * @returns {string} HTML-разметка
-  */
 
   get template() {
     return createEventItemTemplate(this.#point, this.#destinations, this.#offers);
