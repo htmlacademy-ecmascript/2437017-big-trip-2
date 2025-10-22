@@ -6,21 +6,24 @@ import {getRandomArrayElement} from '../utils.js';
 
 /*создаем класс который описывает структуру модели, в котором хранятся данные. Предоставляет методы для управления данными*/
 export default class PointModel {
+  #points;
+  #destinations;
+  #offers;
   constructor() {
-    this.points = Array.from({ length: POINT_COUNT }, () => getRandomArrayElement(mockPoints));
-    this.destinations = mockDestinations;
-    this.offers = mockOffers;
+    this.#points = Array.from({ length: POINT_COUNT }, () => getRandomArrayElement(mockPoints));
+    this.#destinations = mockDestinations;
+    this.#offers = mockOffers;
   }
 
-  getPoints() {
-    return this.points;
+  get points() {
+    return this.#points;
   }
 
-  getDestinations() {
-    return this.destinations;
+  get destinations() {
+    return this.#destinations;
   }
 
-  getOffers() {
-    return this.offers;
+  get offers() {
+    return this.#offers;
   }
 }

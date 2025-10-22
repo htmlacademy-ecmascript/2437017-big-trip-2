@@ -1,4 +1,5 @@
-import { createElement } from '../render.js';
+// import { createElement } from '../render.js';
+import AbstractView from '../framework/view/abstract-view.js';
 
 function createInfoBlock() {
   return ` <section class="trip-main__trip-info  trip-info">
@@ -14,21 +15,21 @@ function createInfoBlock() {
           </section>`;
 }
 
-export default class InfoVeiw {
-  getBlock() {
+export default class InfoVeiw extends AbstractView {
+  get template() {
     return createInfoBlock();
   }
 
 
-  getElement() {
-    if(!this.element) {
-      this.element = createElement(this.getBlock());
-    }
+  // getElement() {
+  //   if(!this.element) {
+  //     this.element = createElement(this.getBlock());
+  //   }
 
-    return this.element;
-  }
+  //   return this.element;
+  // }
 
-  removeElement() {
-    this.element = null;
-  }
+  // removeElement() {
+  //   this.element = null;
+  // }
 }

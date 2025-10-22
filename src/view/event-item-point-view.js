@@ -1,9 +1,12 @@
-import { createElement } from '../render.js';
+// import { createElement } from '../render.js';
 import { humanizeDate } from '../utils.js';
 import { DATE_FORMAT } from '../const.js';
 import dayjs from 'dayjs';
+import AbstractView from '../framework/view/abstract-view.js';
+
 
 function createEventItemTemplate(point, destinations, offers) {
+
   const { type, dateFrom, dateTo, basePrice, isFavorite } = point;
 
   // Находим соотвествующий текущиму point destination по id
@@ -84,26 +87,54 @@ function createEventItemTemplate(point, destinations, offers) {
             </li>`;
 }
 
-export default class PointItemView {
+/**
+ * Представление элемента точки маршрута
+ * @class PointItemView
+ * @extends AbstractView
+ */
+export default class PointItemView extends AbstractView {
+  /** @private */
+  #point;
+  /** @private */
+  #destinations;
+  /** @private */
+  #offers;
+  #handleClick;
 
-  constructor(point, destinations, offers) {
-    this.point = point;
-    this.destinations = destinations;
-    this.offers = offers;
+  /**
+   * Создает экземпляр представления точки маршрута
+   * @param {object} point - данные точки маршрута
+   * @param {object[]} destinations - массив направлений
+   * @param {object[]} offers - массив типов предложений
+   */
+
+  constructor(point, destinations, offers, onClick) {
+    super();
+    this.#point = point;
+    this.#destinations = destinations;
+    this.#offers = offers;
+    this.#handleClick = onClick;
+    this.rollupButton.addEventListener('click', this.#editClickHandle);
   }
 
-  getTemplate() {
-    return createEventItemTemplate(this.point, this.destinations, this.offers);
+  /**
+   * Геттер для кнопки раскрытия (стрелка вниз)
+   */
+  get rollupButton() {
+    return this.element.querySelector('.event__rollup-btn');
   }
 
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
-    }
-    return this.element;
+  /**
+   * Возвращает HTML-разметку элемента
+   * @returns {string} HTML-разметка
+  */
+
+  get template() {
+    return createEventItemTemplate(this.#point, this.#destinations, this.#offers);
   }
 
-  removeElement() {
-    this.element = null;
-  }
+  #editClickHandle = (evt) => {
+    evt.preventDefault();
+    this.#handleClick();
+  };
 }

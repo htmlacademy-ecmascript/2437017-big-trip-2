@@ -1,6 +1,7 @@
-import { createElement } from '../render';
+// import { createElement } from '../render';
 import { humanizeDate } from '../utils.js';
 import { DATE_FORMAT } from '../const.js';
+import AbstractView from '../framework/view/abstract-view.js';
 
 function createEventFormEdit(point, destinations, offers) {
   const { type, dateFrom, dateTo, basePrice } = point;
@@ -106,6 +107,9 @@ function createEventFormEdit(point, destinations, offers) {
 
                   <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
                   <button class="event__reset-btn" type="reset">Cancel</button>
+                  <button class="event__rollup-btn" type="button">
+                    <span class="visually-hidden">Open event</span>
+                  </button>
                 </header>
                 <section class="event__details">
                   <section class="event__section  event__section--offers">
@@ -144,27 +148,69 @@ function createEventFormEdit(point, destinations, offers) {
             </li>`;
 }
 
-export default class FormEditView {
+/**
+ * Представление элемента точки маршрута
+ * @class PointItemView
+ * @extends AbstractView
+ */
+export default class FormEditView extends AbstractView {
+  /** @private */
+  #point;
+  /** @private */
+  #destinations;
+  /** @private */
+  #offers;
+  #handleClick;
+  #handleSubmit;
 
-  constructor(point, destinations, offers) {
-    this.point = point;
-    this.destinations = destinations;
-    this.offers = offers;
+  /**
+   * Создает экземпляр представления точки маршрута
+   * @param {object} point - данные точки маршрута
+   * @param {object[]} destinations - массив направлений
+   * @param {object[]} offers - массив типов предложений
+   */
+
+  constructor(point, destinations, offers, onClick, onSubmit) {
+    super();
+    this.#point = point;
+    this.#destinations = destinations;
+    this.#offers = offers;
+    this.#handleClick = onClick;
+    this.#handleSubmit = onSubmit;
+    this.form.addEventListener('submit', this.#submitHandler);
+    this.rollupButton.addEventListener('click', this.#editClickHandle);
   }
 
-
-  getTemplate() {
-    return createEventFormEdit(this.point, this.destinations, this.offers);
+  /**
+   * Геттер для формы редактирования
+   */
+  get form() {
+    return this.element.querySelector('.event--edit');
   }
 
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
-    }
-    return this.element;
+  /**
+   * Геттер для кнопки "Стрелка вверх"
+   */
+  get rollupButton() {
+    return this.element.querySelector('.event__rollup-btn');
   }
 
-  removeElement() {
-    this.element = null;
+  #submitHandler = (evt) => {
+    evt.preventDefault();
+    this.#handleSubmit();
+  };
+
+  #editClickHandle = (evt) => {
+    evt.preventDefault();
+    this.#handleClick();
+  };
+
+  /**
+   * Возвращает HTML-разметку элемента
+   * @returns {string} HTML-разметка
+  */
+
+  get template() {
+    return createEventFormEdit(this.#point, this.#destinations, this.#offers);
   }
 }
