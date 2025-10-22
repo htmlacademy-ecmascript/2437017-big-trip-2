@@ -1,4 +1,4 @@
-const POINT_COUNT = 3;
+const POINT_COUNT = 4;
 
 const DATE_FORMAT = {
   dayMonth: 'MMM D', // "Jul 10"

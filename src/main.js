@@ -1,4 +1,4 @@
-import TripPresenter from './present/trip-present.js';
+import TripPresenter from './presenter/trip-presenter.js';
 import PointModel from './model/point-model.js';
 
 const tripEventsContainer = document.querySelector('.trip-events'); // основной контейнер

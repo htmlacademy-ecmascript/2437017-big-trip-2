@@ -1,4 +1,3 @@
-// import { createElement } from '../render';
 import { humanizeDate } from '../utils.js';
 import { DATE_FORMAT } from '../const.js';
 import AbstractView from '../framework/view/abstract-view.js';
@@ -154,11 +153,8 @@ function createEventFormEdit(point, destinations, offers) {
  * @extends AbstractView
  */
 export default class FormEditView extends AbstractView {
-  /** @private */
   #point;
-  /** @private */
   #destinations;
-  /** @private */
   #offers;
   #handleClick;
   #handleSubmit;
@@ -177,13 +173,11 @@ export default class FormEditView extends AbstractView {
     this.#offers = offers;
     this.#handleClick = onClick;
     this.#handleSubmit = onSubmit;
+
     this.form.addEventListener('submit', this.#submitHandler);
     this.rollupButton.addEventListener('click', this.#editClickHandle);
   }
 
-  /**
-   * Геттер для формы редактирования
-   */
   get form() {
     return this.element.querySelector('.event--edit');
   }
@@ -204,11 +198,6 @@ export default class FormEditView extends AbstractView {
     evt.preventDefault();
     this.#handleClick();
   };
-
-  /**
-   * Возвращает HTML-разметку элемента
-   * @returns {string} HTML-разметка
-  */
 
   get template() {
     return createEventFormEdit(this.#point, this.#destinations, this.#offers);
