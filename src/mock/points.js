@@ -1,6 +1,8 @@
+import { getRandomArrayElement } from '../utils.js';
+import { nanoid } from 'nanoid';
+
 export const mockPoints = [
   {
-    id: '1',
     type: 'taxi',
     destination: '2',
     dateFrom: '2019-12-01T07:30:56.845Z',
@@ -10,7 +12,6 @@ export const mockPoints = [
     offers: ['4', '5'],
   },
   {
-    id: '2',
     type: 'bus',
     destination: '1',
     dateFrom: '2019-12-01T07:30:56.845Z',
@@ -20,7 +21,6 @@ export const mockPoints = [
     offers: ['6', '7'],
   },
   {
-    id: '3',
     type: 'drive',
     destination: '3',
     dateFrom: '2019-08-05T14:20:00.000Z',
@@ -30,3 +30,10 @@ export const mockPoints = [
     offers: [],
   }
 ];
+
+export function getRandomPoint() {
+  return {
+    id: nanoid(),
+    ...getRandomArrayElement(mockPoints)
+  };
+}
