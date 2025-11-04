@@ -49,6 +49,10 @@ export default class TripPresenter {
     this.#collectionPointPresenter.get(updatePoint.id).init(updatePoint);
   };
 
+  #handleCloseEditEvent = () => {
+    this.#collectionPointPresenter.forEach((tripPresenter) => tripPresenter.reset());
+  };
+
   #renderFilters() {
     render(this.#filterComponent, tripFilterContainer);
   }
@@ -73,6 +77,7 @@ export default class TripPresenter {
         destinations: destinations,
         offers: offers,
         onDataChange: this.#handlerPointChange,
+        onCloseEdit: this.#handleCloseEditEvent,
       });
       pointPresenter.init();
       this.#collectionPointPresenter.set(points[i].id, pointPresenter);

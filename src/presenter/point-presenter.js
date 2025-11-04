@@ -12,14 +12,17 @@ export default class PointPresenter{
   #pointEditComponent = null;
   #handleDataChange;
   #updatePoint;
+  #isOpenEdit = false;
+  #handleClose;
 
 
-  constructor({container, point, destinations, offers, onDataChange}){
+  constructor({container, point, destinations, offers, onDataChange, onCloseEdit}){
     this.#container = container;
     this.#point = point; //объект
     this.#destinations = destinations;//массив
     this.#offers = offers; //массив
     this.#handleDataChange = onDataChange;
+    this.#handleClose = onCloseEdit;
   }
 
   init(point) {
@@ -44,7 +47,7 @@ export default class PointPresenter{
       point: this.#point,
       destinations: this.#destinations,
       offers: this.#offers,
-      onEditClose: this.#handleFormClose,
+      onEditClose: this.#handleCloseEdit,
       onSubmitClick: this.#handleFormSubmit
     });
 
@@ -63,6 +66,11 @@ export default class PointPresenter{
 
     remove(prevPointComponent);
     remove(prevPointEditComponent);
+  }
+
+  destroy () {
+    remove(this.#pointComponent);
+    remove(this.#pointEditComponent);
   }
 
   #replaceCardToForm = () => {
@@ -85,22 +93,31 @@ export default class PointPresenter{
       //() ф-ции замена формы на картачку
       this.#replaceFormToCard();
       document.removeEventListener('keydown', this.#escKeyDownHandler);
+      this.#isOpenEdit = false;
     }
   };
 
-  // Внешние обработчики, передаваемые в конструкторы компонентов
   #handleOpenEdit = () => {
+    this.#handleClose();
     this.#replaceCardToForm();
     document.addEventListener('keydown', this.#escKeyDownHandler);
+    this.#isOpenEdit = true;
+  };
+
+  #handleCloseEdit = () => {
+    this.#replaceFormToCard();
+    document.removeEventListener('keydown', this.#escKeyDownHandler);
+    this.#isOpenEdit = false;
+  };
+
+  reset = () => {
+    if(this.#isOpenEdit) {
+      this.#handleCloseEdit();
+    }
   };
 
   #handleFormSubmit = () => {
     // Здесь будет логика сохранения формы
-    this.#replaceFormToCard();
-    document.removeEventListener('keydown', this.#escKeyDownHandler);
-  };
-
-  #handleFormClose = () => {
     this.#replaceFormToCard();
     document.removeEventListener('keydown', this.#escKeyDownHandler);
   };

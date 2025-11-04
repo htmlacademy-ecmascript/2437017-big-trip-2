@@ -13,4 +13,4 @@ const RenderPosition = {
   AFTEREND: 'afterend',
 };
 
-export {POINT_COUNT, RenderPosition, DATE_FORMAT};
+export {POINT_COUNT, RenderPosition, DATE_FORMAT };
