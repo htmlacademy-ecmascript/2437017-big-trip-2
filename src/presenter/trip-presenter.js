@@ -4,31 +4,61 @@ import FilterView from '../view/filter-trip-view.js';
 import PointListView from '../view/event-list-view.js';
 import NoPointView from '../view/no-point-view.js';
 import { render } from '../framework/render.js';
+import { updateItem } from '../utils.js';
 
 
 const tripFilterContainer = document.querySelector('.trip-controls__filters');
 export default class TripPresenter {
   #tripContainer;
-  #pointModel;
-  #eventsListComponent;
+  #points;
+  #destinations;
+  #offers;
+
+  #eventsListComponent = new PointListView();
+  #filterComponent = new FilterView();
+  #sortComponent = new SortEventView();
+  #noPointComponent = new NoPointView();
+
+  #newPoints = [];
+  #collectionPointPresenter = new Map();
 
   constructor({ tripContainer, pointModel }) {
     this.#tripContainer = tripContainer;
-    this.#pointModel = pointModel; //все данные
-    this.#eventsListComponent = new PointListView();
+    this.#points = pointModel.points;
+    this.#destinations = pointModel.destinations;
+    this.#offers = pointModel.offers;
   }
 
   //Инициализирует весь интерфейс
   init() {
-    this.#renderApp();
+    this.#newPoints = [...this.#points];
+    this.#renderFilters();
+
+    if(this.#points.length === 0) {
+      this.#renderNoPoint();
+      return;
+    }
+
+    this.#renderSort();
+    this.#renderEventsList();
+    this.#renderPoints(this.#points, this.#destinations, this.#offers);
   }
 
+  #handlerPointChange = (updatePoint) => {
+    this.#newPoints = updateItem (this.#newPoints, updatePoint);
+    this.#collectionPointPresenter.get(updatePoint.id).init(updatePoint);
+  };
+
+  #handleCloseEditEvent = () => {
+    this.#collectionPointPresenter.forEach((tripPresenter) => tripPresenter.reset());
+  };
+
   #renderFilters() {
-    render(new FilterView(), tripFilterContainer);
+    render(this.#filterComponent, tripFilterContainer);
   }
 
   #renderSort() {
-    render(new SortEventView(), this.#tripContainer);
+    render(this.#sortComponent, this.#tripContainer);
   }
 
   #renderEventsList() {
@@ -36,7 +66,7 @@ export default class TripPresenter {
   }
 
   #renderNoPoint() {
-    render(new NoPointView(), this.#tripContainer);
+    render(this.#noPointComponent, this.#tripContainer);
   }
 
   #renderPoints (points, destinations, offers) {
@@ -44,27 +74,13 @@ export default class TripPresenter {
       const pointPresenter = new PointPresenter ({
         container: this.#eventsListComponent,
         point: points[i],
-        destinations,
-        offers,
+        destinations: destinations,
+        offers: offers,
+        onDataChange: this.#handlerPointChange,
+        onCloseEdit: this.#handleCloseEditEvent,
       });
       pointPresenter.init();
+      this.#collectionPointPresenter.set(points[i].id, pointPresenter);
     }
-  }
-
-  #renderApp () {
-    const points = this.#pointModel.points;
-    const destinations = this.#pointModel.destinations;
-    const offers = this.#pointModel.offers;
-
-    this.#renderFilters();
-
-    if(points.length === 0) {
-      this.#renderNoPoint();
-      return;
-    }
-
-    this.#renderSort();
-    this.#renderEventsList();
-    this.#renderPoints(points, destinations, offers);
   }
 }

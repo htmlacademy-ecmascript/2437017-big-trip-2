@@ -1,4 +1,4 @@
-const POINT_COUNT = 4;
+const POINT_COUNT = 3;
 
 const DATE_FORMAT = {
   dayMonth: 'MMM D', // "Jul 10"
@@ -13,4 +13,4 @@ const RenderPosition = {
   AFTEREND: 'afterend',
 };
 
-export {POINT_COUNT, RenderPosition, DATE_FORMAT};
+export {POINT_COUNT, RenderPosition, DATE_FORMAT };

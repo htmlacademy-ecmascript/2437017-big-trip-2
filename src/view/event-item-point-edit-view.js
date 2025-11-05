@@ -166,13 +166,13 @@ export default class FormEditView extends AbstractView {
    * @param {object[]} offers - массив типов предложений
    */
 
-  constructor(point, destinations, offers, onClick, onSubmit) {
+  constructor({point, destinations, offers, onEditClose, onSubmitClick}) {
     super();
     this.#point = point;
     this.#destinations = destinations;
     this.#offers = offers;
-    this.#handleClick = onClick;
-    this.#handleSubmit = onSubmit;
+    this.#handleClick = onEditClose;
+    this.#handleSubmit = onSubmitClick;
 
     this.form.addEventListener('submit', this.#submitHandler);
     this.rollupButton.addEventListener('click', this.#editClickHandle);
@@ -182,9 +182,6 @@ export default class FormEditView extends AbstractView {
     return this.element.querySelector('.event--edit');
   }
 
-  /**
-   * Геттер для кнопки "Стрелка вверх"
-   */
   get rollupButton() {
     return this.element.querySelector('.event__rollup-btn');
   }
