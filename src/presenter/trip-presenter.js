@@ -5,6 +5,8 @@ import PointListView from '../view/event-list-view.js';
 import NoPointView from '../view/no-point-view.js';
 import { render } from '../framework/render.js';
 import { updateItem } from '../utils.js';
+import { SortType } from '../const.js';
+import { sortingByPrice, sortingByDay, sortingByTime } from '../utils';
 
 
 const tripFilterContainer = document.querySelector('.trip-controls__filters');
@@ -16,7 +18,10 @@ export default class TripPresenter {
 
   #eventsListComponent = new PointListView();
   #filterComponent = new FilterView();
-  #sortComponent = new SortEventView();
+
+  #sortComponent = null;
+  #currentSortType = SortType.DAY;
+
   #noPointComponent = new NoPointView();
 
   #newPoints = [];
@@ -49,17 +54,49 @@ export default class TripPresenter {
     this.#collectionPointPresenter.get(updatePoint.id).init(updatePoint);
   };
 
-  #handleCloseEditEvent = () => {
+  #resetAllPoints = () => {
     this.#collectionPointPresenter.forEach((tripPresenter) => tripPresenter.reset());
   };
+
+  #clearPointsList() {
+    this.#collectionPointPresenter.forEach((presenter) => presenter.destroy());
+    this.#collectionPointPresenter.clear();
+  }
 
   #renderFilters() {
     render(this.#filterComponent, tripFilterContainer);
   }
 
   #renderSort() {
+    this.#sortComponent = new SortEventView({
+      onSortClick: this.#handleSortTypeChange,
+    });
     render(this.#sortComponent, this.#tripContainer);
   }
+
+  #handleSortTypeChange = (sortType) => {
+    if(this.#currentSortType === sortType) {
+      return;
+    }
+    this.#currentSortType = sortType;
+    this.#sortPoints(this.#currentSortType);
+    this.#clearPointsList();
+    this.#renderPoints(this.#newPoints, this.#destinations, this.#offers);
+  };
+
+  #sortPoints = (type) => {
+    switch (type) {
+      case 'day':
+        this.#newPoints.sort(sortingByDay);
+        break;
+      case 'price':
+        this.#newPoints.sort(sortingByPrice);
+        break;
+      case 'time':
+        this.#newPoints.sort(sortingByTime);
+        break;
+    }
+  };
 
   #renderEventsList() {
     render(this.#eventsListComponent, this.#tripContainer);
@@ -77,7 +114,7 @@ export default class TripPresenter {
         destinations: destinations,
         offers: offers,
         onDataChange: this.#handlerPointChange,
-        onCloseEdit: this.#handleCloseEditEvent,
+        onCloseEdit: this.#resetAllPoints ,
       });
       pointPresenter.init();
       this.#collectionPointPresenter.set(points[i].id, pointPresenter);
