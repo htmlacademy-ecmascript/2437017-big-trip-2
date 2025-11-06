@@ -13,4 +13,10 @@ const RenderPosition = {
   AFTEREND: 'afterend',
 };
 
-export {POINT_COUNT, RenderPosition, DATE_FORMAT };
+const SortType = {
+  DAY: 'day',
+  TIME: 'time',
+  PRICE: 'price'
+};
+
+export {POINT_COUNT, RenderPosition, DATE_FORMAT, SortType};
