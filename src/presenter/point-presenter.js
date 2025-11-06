@@ -40,7 +40,7 @@ export default class PointPresenter{
       destinations: this.#destinations,
       offers: this.#offers,
       onEditClick: this.#handleOpenEdit,
-      onFavoritClick: this.#handlePointChangle,
+      onFavoriteClick: this.#handlePointChange,
     });
 
     this.#pointEditComponent = new FormEditView({
@@ -56,11 +56,11 @@ export default class PointPresenter{
       return;
     }
 
-    if(prevPointComponent.element.parentElement){
+    if(!this.#isOpenEdit){
       replace(this.#pointComponent, prevPointComponent);
     }
 
-    if(prevPointEditComponent.element.parentElement){
+    if(this.#isOpenEdit){
       replace(this.#pointEditComponent, prevPointEditComponent);
     }
 
@@ -81,7 +81,7 @@ export default class PointPresenter{
     replace(this.#pointComponent, this.#pointEditComponent);
   };
 
-  #handlePointChangle = () => {
+  #handlePointChange = () => {
     this.#updatePoint = {...this.#point,};
     this.#updatePoint.isFavorite = !this.#point.isFavorite;
     this.#handleDataChange(this.#updatePoint);

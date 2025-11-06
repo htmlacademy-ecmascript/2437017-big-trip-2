@@ -3,9 +3,9 @@ import SortEventView from '../view/sort-event-trip-view.js';
 import FilterView from '../view/filter-trip-view.js';
 import PointListView from '../view/event-list-view.js';
 import NoPointView from '../view/no-point-view.js';
-import { render } from '../framework/render.js';
+import { render, remove } from '../framework/render.js';
 import { updateItem } from '../utils.js';
-import { SortType } from '../const.js';
+import { RenderPosition, SortType } from '../const.js';
 import { sortingByPrice, sortingByDay, sortingByTime } from '../utils';
 
 
@@ -44,6 +44,7 @@ export default class TripPresenter {
       return;
     }
 
+    remove(this.#sortComponent);
     this.#renderSort();
     this.#renderEventsList();
     this.#renderPoints(this.#points, this.#destinations, this.#offers);
@@ -70,8 +71,9 @@ export default class TripPresenter {
   #renderSort() {
     this.#sortComponent = new SortEventView({
       onSortClick: this.#handleSortTypeChange,
+      sortType: this.#currentSortType,
     });
-    render(this.#sortComponent, this.#tripContainer);
+    render(this.#sortComponent, this.#tripContainer, RenderPosition.BEFOREBEGIN);
   }
 
   #handleSortTypeChange = (sortType) => {
@@ -79,12 +81,14 @@ export default class TripPresenter {
       return;
     }
     this.#currentSortType = sortType;
-    this.#sortPoints(this.#currentSortType);
+    this.#clearSort();
+    this.#renderSort();
+    this.#switch(this.#currentSortType);
     this.#clearPointsList();
     this.#renderPoints(this.#newPoints, this.#destinations, this.#offers);
   };
 
-  #sortPoints = (type) => {
+  #switch = (type) => {
     switch (type) {
       case 'day':
         this.#newPoints.sort(sortingByDay);
@@ -95,8 +99,17 @@ export default class TripPresenter {
       case 'time':
         this.#newPoints.sort(sortingByTime);
         break;
+      default:
+        this.#newPoints = [...this.#points];
     }
   };
+
+  #clearSort() {
+    if (this.#sortComponent) {
+      remove(this.#sortComponent);
+      this.#sortComponent = null;
+    }
+  }
 
   #renderEventsList() {
     render(this.#eventsListComponent, this.#tripContainer);

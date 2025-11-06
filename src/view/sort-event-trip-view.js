@@ -1,9 +1,9 @@
 import AbstractView from '../framework/view/abstract-view.js';
 
-function createSortEventTemplate() {
+function createSortEventTemplate(currentSortType) {
   return `<form class="trip-events__trip-sort  trip-sort" action="#" method="get">
             <div class="trip-sort__item  trip-sort__item--day">
-              <input id="sort-day" class="trip-sort__input  visually-hidden" type="radio" name="trip-sort" value="sort-day" data-sort-type="day" checked>
+              <input id="sort-day" class="trip-sort__input  visually-hidden" type="radio" name="trip-sort" value="sort-day" data-sort-type="day" ${currentSortType === 'day' ? 'checked' : ''}>
               <label class="trip-sort__btn" for="sort-day">Day</label>
             </div>
 
@@ -13,12 +13,12 @@ function createSortEventTemplate() {
             </div>
 
             <div class="trip-sort__item  trip-sort__item--time">
-              <input id="sort-time" class="trip-sort__input  visually-hidden" type="radio" name="trip-sort" value="sort-time" data-sort-type="time">
+              <input id="sort-time" class="trip-sort__input  visually-hidden" type="radio" name="trip-sort" value="sort-time" data-sort-type="time" ${currentSortType === 'time' ? 'checked' : ''}>
               <label class="trip-sort__btn" for="sort-time">Time</label>
             </div>
 
             <div class="trip-sort__item  trip-sort__item--price">
-              <input id="sort-price" class="trip-sort__input  visually-hidden" type="radio" name="trip-sort" value="sort-price" data-sort-type="price">
+              <input id="sort-price" class="trip-sort__input  visually-hidden" type="radio" name="trip-sort" value="sort-price" data-sort-type="price" ${currentSortType === 'price' ? 'checked' : ''}>
               <label class="trip-sort__btn" for="sort-price">Price</label>
             </div>
 
@@ -31,16 +31,17 @@ function createSortEventTemplate() {
 
 export default class SortEventView extends AbstractView {
   #handleSortClick;
+  #currentSortType;
 
-  constructor({onSortClick}) {
+  constructor({onSortClick, sortType}) {
     super();
+    this.#currentSortType = sortType;
     this.element.addEventListener('click', this.#sortClickHandle);
     this.#handleSortClick = onSortClick;
-
   }
 
   get template(){
-    return createSortEventTemplate();
+    return createSortEventTemplate(this.#currentSortType);
   }
 
   #sortClickHandle = (evt) => {
