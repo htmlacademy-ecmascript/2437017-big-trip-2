@@ -15,7 +15,7 @@ export default class AbstractStatefulView extends AbstractView {
     if (!update) {
       return;
     }
-
+    console.log('Пришли данные в updateElement с view', update);
     this._setState(update);
 
     this.#rerenderElement();
@@ -35,16 +35,27 @@ export default class AbstractStatefulView extends AbstractView {
    */
   _setState(update) {
     this._state = structuredClone({...this._state, ...update});
+    console.log('Пришли данные в _setState c updateElement', this._state);
   }
 
   /** Метод для перерисовки элемента */
   #rerenderElement() {
+    // ШАГ 1: Сохраняем текущий элемент
+    // this.element возвращает существующий элемент li
     const prevElement = this.element;
-    const parent = prevElement.parentElement;
+    console.log(prevElement);
+
+    const parent = prevElement.parentElement; //ul
+    console.log(parent);
+
+    // ШАГ 2: Удаляем элемент из DOM и очищаем внутреннюю ссылку
+    // Теперь this.element = null
     this.removeElement();
 
-    const newElement = this.element;
+    const newElement = this.element; //Новый элемент (после удаления) c актуальным состоянием
+    console.log(newElement);
 
+    //заменить один дочерний узел указанного узла другим
     parent.replaceChild(newElement, prevElement);
 
     this._restoreHandlers();
