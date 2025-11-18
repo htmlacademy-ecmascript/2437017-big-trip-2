@@ -4,10 +4,6 @@ import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
 
 function createEventFormEdit(point, destinations, offers) {
   const { type, dateFrom, dateTo, basePrice } = point;
-  console.log(type);
-  console.log(dateFrom);
-  console.log(dateTo);
-  console.log(basePrice);
 
   const pointDestination = destinations.find((element) => element.id === point.destination);
   const offerType = offers.find((element) => element.type === point.type);
@@ -158,13 +154,6 @@ export default class FormEditView extends AbstractStatefulView {
   #handleClick;
   #handleSubmit;
 
-  /**
-   * Создает экземпляр представления точки маршрута
-   * @param {object} point - данные точки маршрута
-   * @param {object[]} destinations - массив направлений
-   * @param {object[]} offers - массив типов предложений
-   */
-
   constructor({point, destinations, offers, onEditClose, onSubmitClick}) {
     super();
     this.#point = point;
@@ -172,9 +161,7 @@ export default class FormEditView extends AbstractStatefulView {
     this.#offers = offers;
     this.#handleClick = onEditClose;
     this.#handleSubmit = onSubmitClick;
-    this._setState({
-      ...point
-    });
+    this._setState({...this.#point});
     this._restoreHandlers();
   }
 
@@ -186,12 +173,17 @@ export default class FormEditView extends AbstractStatefulView {
 
   #typeChangeHandle = (evt) => {
     const selectedType = evt.target.value;
-    const availableOffers = this.#offers.find((offer) => offer.type === selectedType);
-    console.log('выбранный тип '+ selectedType);
-
     this.updateElement({
       type: selectedType,
     });
+  };
+
+  reset = () => {
+    this._setState({
+      ...this.#point
+    });
+    // перерисовываем
+    this.updateElement({});
   };
 
   #submitHandler = (evt) => {

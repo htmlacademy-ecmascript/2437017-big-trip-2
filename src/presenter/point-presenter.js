@@ -78,6 +78,7 @@ export default class PointPresenter{
   };
 
   #replaceFormToCard = () => {
+    this.#pointEditComponent.reset();
     replace(this.#pointComponent, this.#pointEditComponent);
   };
 
