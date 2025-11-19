@@ -169,6 +169,7 @@ export default class FormEditView extends AbstractStatefulView {
     this.element.querySelector('.event--edit').addEventListener('submit', this.#submitHandler);
     this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#editClickHandle);
     this.element.querySelector('.event__type-list').addEventListener('change', this.#typeChangeHandle);
+    this.element.querySelector('.event__input--destination').addEventListener('input', this.#destinationsChangeHandle);
   };
 
   #typeChangeHandle = (evt) => {
@@ -176,6 +177,13 @@ export default class FormEditView extends AbstractStatefulView {
     this.updateElement({
       type: selectedType,
     });
+  };
+
+  #destinationsChangeHandle = (evt) => {
+    const destinationInput = this.#destinations.find((element) => element.name === evt.target.value);
+    if (destinationInput) {
+      this.updateElement({ destination: destinationInput.id });
+    }
   };
 
   reset = () => {
