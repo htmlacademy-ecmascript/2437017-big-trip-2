@@ -33,10 +33,7 @@ export default class AbstractStatefulView extends AbstractView {
    * @param {Object} update Объект с обновлённой частью состояния
    */
   _setState(update) {
-    console.log('1 ', update);
-    console.log('2 до _state ', this._state);
     this._state = structuredClone({...this._state, ...update});
-    console.log('3 после _state ', this._state);
   }
 
   /** Метод для перерисовки элемента */
