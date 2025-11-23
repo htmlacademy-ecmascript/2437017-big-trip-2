@@ -1,6 +1,6 @@
 import { humanizeDate } from '../utils.js';
 import { DATE_FORMAT } from '../const.js';
-import AbstractView from '../framework/view/abstract-view.js';
+import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
 
 function createEventFormEdit(point, destinations, offers) {
   const { type, dateFrom, dateTo, basePrice } = point;
@@ -29,47 +29,47 @@ function createEventFormEdit(point, destinations, offers) {
                         <legend class="visually-hidden">Event type</legend>
 
                         <div class="event__type-item">
-                          <input id="event-type-taxi-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="taxi">
+                          <input id="event-type-taxi-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="taxi" ${type === 'taxi' ? 'checked' : ''}>
                           <label class="event__type-label  event__type-label--taxi" for="event-type-taxi-1">Taxi</label>
                         </div>
 
                         <div class="event__type-item">
-                          <input id="event-type-bus-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="bus">
+                          <input id="event-type-bus-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="bus" ${type === 'bus' ? 'checked' : ''}>
                           <label class="event__type-label  event__type-label--bus" for="event-type-bus-1">Bus</label>
                         </div>
 
                         <div class="event__type-item">
-                          <input id="event-type-train-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="train">
+                          <input id="event-type-train-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="train" ${type === 'train' ? 'checked' : ''}>
                           <label class="event__type-label  event__type-label--train" for="event-type-train-1">Train</label>
                         </div>
 
                         <div class="event__type-item">
-                          <input id="event-type-ship-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="ship">
+                          <input id="event-type-ship-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="ship" ${type === 'ship' ? 'checked' : ''}>
                           <label class="event__type-label  event__type-label--ship" for="event-type-ship-1">Ship</label>
                         </div>
 
                         <div class="event__type-item">
-                          <input id="event-type-drive-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="drive">
+                          <input id="event-type-drive-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="drive" ${type === 'drive' ? 'checked' : ''}>
                           <label class="event__type-label  event__type-label--drive" for="event-type-drive-1">Drive</label>
                         </div>
 
                         <div class="event__type-item">
-                          <input id="event-type-flight-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="flight" checked>
+                          <input id="event-type-flight-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="flight" ${type === 'flight' ? 'checked' : ''}>
                           <label class="event__type-label  event__type-label--flight" for="event-type-flight-1">Flight</label>
                         </div>
 
                         <div class="event__type-item">
-                          <input id="event-type-check-in-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="check-in">
+                          <input id="event-type-check-in-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="check-in" ${type === 'check-in' ? 'checked' : ''}>
                           <label class="event__type-label  event__type-label--check-in" for="event-type-check-in-1">Check-in</label>
                         </div>
 
                         <div class="event__type-item">
-                          <input id="event-type-sightseeing-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="sightseeing">
+                          <input id="event-type-sightseeing-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="sightseeing" ${type === 'sightseeing' ? 'checked' : ''}>
                           <label class="event__type-label  event__type-label--sightseeing" for="event-type-sightseeing-1">Sightseeing</label>
                         </div>
 
                         <div class="event__type-item">
-                          <input id="event-type-restaurant-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="restaurant">
+                          <input id="event-type-restaurant-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="restaurant" ${type === 'restaurant' ? 'checked' : ''}>
                           <label class="event__type-label  event__type-label--restaurant" for="event-type-restaurant-1">Restaurant</label>
                         </div>
                       </fieldset>
@@ -147,24 +147,12 @@ function createEventFormEdit(point, destinations, offers) {
             </li>`;
 }
 
-/**
- * Представление элемента точки маршрута
- * @class PointItemView
- * @extends AbstractView
- */
-export default class FormEditView extends AbstractView {
+export default class FormEditView extends AbstractStatefulView {
   #point;
   #destinations;
   #offers;
   #handleClick;
   #handleSubmit;
-
-  /**
-   * Создает экземпляр представления точки маршрута
-   * @param {object} point - данные точки маршрута
-   * @param {object[]} destinations - массив направлений
-   * @param {object[]} offers - массив типов предложений
-   */
 
   constructor({point, destinations, offers, onEditClose, onSubmitClick}) {
     super();
@@ -173,18 +161,38 @@ export default class FormEditView extends AbstractView {
     this.#offers = offers;
     this.#handleClick = onEditClose;
     this.#handleSubmit = onSubmitClick;
-
-    this.form.addEventListener('submit', this.#submitHandler);
-    this.rollupButton.addEventListener('click', this.#editClickHandle);
+    this._setState({...this.#point});
+    this._restoreHandlers();
   }
 
-  get form() {
-    return this.element.querySelector('.event--edit');
-  }
+  _restoreHandlers = () => {
+    this.element.querySelector('.event--edit').addEventListener('submit', this.#submitHandler);
+    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#editClickHandle);
+    this.element.querySelector('.event__type-list').addEventListener('change', this.#typeChangeHandle);
+    this.element.querySelector('.event__input--destination').addEventListener('input', this.#destinationsChangeHandle);
+  };
 
-  get rollupButton() {
-    return this.element.querySelector('.event__rollup-btn');
-  }
+  #typeChangeHandle = (evt) => {
+    const selectedType = evt.target.value;
+    this.updateElement({
+      type: selectedType,
+    });
+  };
+
+  #destinationsChangeHandle = (evt) => {
+    const destinationInput = this.#destinations.find((element) => element.name === evt.target.value);
+    if (destinationInput) {
+      this.updateElement({ destination: destinationInput.id });
+    }
+  };
+
+  reset = () => {
+    this._setState({
+      ...this.#point
+    });
+    // перерисовываем
+    this.updateElement({});
+  };
 
   #submitHandler = (evt) => {
     evt.preventDefault();
@@ -197,6 +205,6 @@ export default class FormEditView extends AbstractView {
   };
 
   get template() {
-    return createEventFormEdit(this.#point, this.#destinations, this.#offers);
+    return createEventFormEdit(this._state, this.#destinations, this.#offers);
   }
 }
