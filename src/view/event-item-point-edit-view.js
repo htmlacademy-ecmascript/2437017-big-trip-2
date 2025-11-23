@@ -1,6 +1,8 @@
 import { humanizeDate } from '../utils.js';
 import { DATE_FORMAT } from '../const.js';
 import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
+import flatpickr from 'flatpickr';
+import 'flatpickr/dist/flatpickr.min.css';
 
 function createEventFormEdit(point, destinations, offers) {
   const { type, dateFrom, dateTo, basePrice } = point;
@@ -153,6 +155,8 @@ export default class FormEditView extends AbstractStatefulView {
   #offers;
   #handleClick;
   #handleSubmit;
+  #datepickerFrom = null;
+  #datepickerTo = null;
 
   constructor({point, destinations, offers, onEditClose, onSubmitClick}) {
     super();
@@ -170,6 +174,8 @@ export default class FormEditView extends AbstractStatefulView {
     this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#editClickHandle);
     this.element.querySelector('.event__type-list').addEventListener('change', this.#typeChangeHandle);
     this.element.querySelector('.event__input--destination').addEventListener('input', this.#destinationsChangeHandle);
+
+    this.#setDatepickers();
   };
 
   #typeChangeHandle = (evt) => {
@@ -194,6 +200,20 @@ export default class FormEditView extends AbstractStatefulView {
     this.updateElement({});
   };
 
+  removeElement = () => {
+    super.removeElement();
+
+    if(this.#datepickerFrom) {
+      this.#datepickerFrom.destroy();
+      this.#datepickerFrom = null;
+    }
+
+    if(this.#datepickerTo) {
+      this.#datepickerTo.destroy();
+      this.#datepickerTo = null;
+    }
+  };
+
   #submitHandler = (evt) => {
     evt.preventDefault();
     this.#handleSubmit();
@@ -202,6 +222,59 @@ export default class FormEditView extends AbstractStatefulView {
   #editClickHandle = (evt) => {
     evt.preventDefault();
     this.#handleClick();
+  };
+
+  #dateFromChangeHandler = ([userDate]) => {
+    this.updateElement({
+      dateFrom: userDate,
+    });
+
+    if (this.#datepickerTo) {
+      this.#datepickerTo.set('minDate', userDate);
+    }
+  };
+
+  #dateToChangeHandler = ([userDate]) => {
+    this.updateElement({
+      dateTo: userDate,
+    });
+
+    if (this.#datepickerFrom) {
+      this.#datepickerFrom.set('maxDate', userDate);
+    }
+  };
+
+  #setDatepickers = () => {
+    const dateInpunts = this.element.querySelectorAll('.event__input--time');
+    const dateFromElement = dateInpunts[0];
+    const dateToElement = dateInpunts[1];
+    const commonConfig = {
+      dateFormat: 'd/m/y H:i',
+      enableTime: true,
+      locale: {firstDayOfWeek: 1},
+      'time_24hr': true,
+      allowInput: true,
+    };
+
+    this.#datepickerFrom = flatpickr(
+      dateFromElement,
+      {
+        ...commonConfig,
+        defaultDate: this._state.dateFrom,
+        onChange: this.#dateFromChangeHandler ,
+        maxDate: this._state.dateTo
+      }
+    );
+
+    this.#datepickerTo = flatpickr(
+      dateToElement,
+      {
+        ...commonConfig,
+        defaultDate: this._state.dateTo,
+        onChange: this.#dateToChangeHandler,
+        minDate: this._state.dateFrom
+      }
+    );
   };
 
   get template() {
